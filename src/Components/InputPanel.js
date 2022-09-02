@@ -12,6 +12,9 @@ import Button from '@mui/material/Button';
 import { Stack } from '@mui/material';
 import DATA from '../Data/newFeedbackSearch_all_setDirectInfiltrationAs2.json';
 import Alert from '@mui/material/Alert';
+import Tooltip from '@mui/material/Tooltip';
+import HelpIcon from '@mui/icons-material/Help';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 const InputPanel = ({
     handleSetScenarios,
@@ -62,6 +65,20 @@ const InputPanel = ({
         { value: 4, label: '4' },
         { value: 5, label: '5' },
     ];
+
+    const tooltipContent = {
+        runoff_reduction:
+            'The specified performance standard is a 80% reduction in stormwater runoff',
+
+        storm_duration:
+            'Option to choose a short storm duration (2 Hours) or a long storm duration (24 hours)',
+
+        soil_type:
+            'Option to choose native soils texture (fine, mixed, coarse)',
+
+        gsi_type:
+            'Option to choose two GSI Types, Planted (Rain Garden) and Paved (Permeable Pavement)',
+    };
 
     const [durationHelperText, setDurationHelperText] = useState('');
     const [soilHelperText, setSoilHelperText] = useState('');
@@ -158,6 +175,14 @@ const InputPanel = ({
                     <FormControl component="fieldset">
                         <FormLabel component="legend">
                             Runoff Reduction
+                            <Tooltip
+                                title={`${tooltipContent.runoff_reduction}`}
+                                placement="right"
+                            >
+                                <Button>
+                                    <HelpOutlineOutlinedIcon color="disabled" />
+                                </Button>
+                            </Tooltip>
                         </FormLabel>
 
                         <RadioGroup
@@ -175,7 +200,17 @@ const InputPanel = ({
                     </FormControl>
 
                     <FormControl error={durationError} component="fieldset">
-                        <FormLabel component="legend">Storm Duration</FormLabel>
+                        <FormLabel component="legend">
+                            Storm Duration
+                            <Tooltip
+                                title={`${tooltipContent.storm_duration}`}
+                                placement="right"
+                            >
+                                <Button>
+                                    <HelpOutlineOutlinedIcon color="disabled" />
+                                </Button>
+                            </Tooltip>
+                        </FormLabel>
                         <FormHelperText>{durationHelperText}</FormHelperText>
                         <RadioGroup
                             defaultValue={2}
@@ -199,7 +234,17 @@ const InputPanel = ({
                     </FormControl>
 
                     <FormControl error={soilError} component="fieldset">
-                        <FormLabel component="legend">Soil Type</FormLabel>
+                        <FormLabel component="legend">
+                            Soil Type
+                            <Tooltip
+                                title={`${tooltipContent.soil_type}`}
+                                placement="right"
+                            >
+                                <Button>
+                                    <HelpOutlineOutlinedIcon color="disabled" />
+                                </Button>
+                            </Tooltip>
+                        </FormLabel>
                         <FormHelperText>{soilHelperText}</FormHelperText>
                         <RadioGroup
                             value={soilType}
@@ -227,7 +272,17 @@ const InputPanel = ({
                     </FormControl>
 
                     <FormControl error={surfaceError} component="fieldset">
-                        <FormLabel component="legend">GSI Type</FormLabel>
+                        <FormLabel component="legend">
+                            GSI Type
+                            <Tooltip
+                                title={`${tooltipContent.gsi_type}`}
+                                placement="right"
+                            >
+                                <Button>
+                                    <HelpOutlineOutlinedIcon color="disabled" />
+                                </Button>
+                            </Tooltip>
+                        </FormLabel>
                         <FormHelperText>{surfaceHelperText}</FormHelperText>
                         <RadioGroup
                             value={surfaceType}
