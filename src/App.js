@@ -53,6 +53,7 @@ function App(props) {
         'Impermeable Hard Pavement',
     ]);
 
+    //change the displayed lengend as the output change with planted or paved surface
     useEffect(() => {
         if (scenarios) {
             const surface =

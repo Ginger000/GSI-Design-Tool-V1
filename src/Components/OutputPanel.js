@@ -217,7 +217,10 @@ const OutputPanel = ({
                                     args={[4.002, 0.3, 6.01]}
                                     GSIRatio={loadingRatio}
                                     color={
-                                        surfaceType === 'planted'
+                                        //need to check null
+                                        //because we don't have scenarios at the beginning
+                                        scenarios &&
+                                        scenarios[0].surface === 'planted'
                                             ? 'green'
                                             : 'lightblue'
                                     }
