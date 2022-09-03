@@ -24,6 +24,8 @@ import GSIdepth from './WebGL/GSIdepth';
 import ScenarioDataGrid from './ScenarioDataGrid';
 import FeedbackScenariosDataGrid from './FeedbackScenariosDataGrid';
 import Legend from './Legend';
+import Tooltip from '@mui/material/Tooltip';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -182,6 +184,12 @@ const OutputPanel = ({
         30: 2.5,
     };
 
+    const tooltipContent = {
+        loading_ratio:
+            'The loading ratio is the ratio of the surface runoff area to the green infrastructure area',
+        depth: 'Depth is the thickness of the GSI surface design, specified to be either 12, 18, 24 or 30 inches',
+    };
+
     const matches = useMediaQuery('(min-width:600px)');
     return (
         <>
@@ -288,6 +296,14 @@ const OutputPanel = ({
                             <FormControl component="fieldset">
                                 <FormLabel component="legend">
                                     Depth (inches)
+                                    <Tooltip
+                                        title={`${tooltipContent.depth}`}
+                                        placement="right"
+                                    >
+                                        <Button>
+                                            <HelpOutlineOutlinedIcon color="disabled" />
+                                        </Button>
+                                    </Tooltip>
                                 </FormLabel>
                                 {depthWarning ? (
                                     <Alert
@@ -335,6 +351,14 @@ const OutputPanel = ({
                                 <FormControl component="fieldset">
                                     <FormLabel component="legend">
                                         Loading Ratio
+                                        <Tooltip
+                                            title={`${tooltipContent.loading_ratio}`}
+                                            placement="right"
+                                        >
+                                            <Button>
+                                                <HelpOutlineOutlinedIcon color="disabled" />
+                                            </Button>
+                                        </Tooltip>
                                     </FormLabel>
                                     {ratioWarning ? (
                                         <Alert
