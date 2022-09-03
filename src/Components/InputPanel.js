@@ -13,7 +13,6 @@ import { Stack } from '@mui/material';
 import DATA from '../Data/newFeedbackSearch_all_setDirectInfiltrationAs2.json';
 import Alert from '@mui/material/Alert';
 import Tooltip from '@mui/material/Tooltip';
-import HelpIcon from '@mui/icons-material/Help';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
 const InputPanel = ({
