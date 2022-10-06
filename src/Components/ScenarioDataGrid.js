@@ -83,17 +83,7 @@ const ScenarioDataGrid = ({
     return (
         <div>
             <br />
-            <Typography variant="subtitle2" gutterBottom component={'span'}>
-                The data table below prints out all Scenarios of GSI-depth and
-                GSI-loading-ratio combinations that fit your input site
-                conditions.
-                <br />
-                By default, we sort all scenarios in the most economic way : we
-                sort ratio first and sort depth if the ratio is same.
-                <br />
-                In the prototype visuailization above, we represent the most
-                economic prototype by default.
-            </Typography>
+            <h2 style={{ color: 'grey' }}>Table-1 Scenarios</h2>
             <>
                 <DataGrid
                     rows={rows}
