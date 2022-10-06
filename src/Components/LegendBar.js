@@ -1,14 +1,14 @@
-function LegendBar({ title }) {
+function LegendBar({ title, displayedTitle }) {
     const colorSpecs = {
-        'Ground Base': '#D7B7BD',
-        'Impermeable Hard Pavement': '#858585',
-        'GSI Type - Planted Surface': '#008B14',
-        'GSI Type - Paved Surface': '#B5E3EE',
-        'GSI Depth': '#ECE957',
+        ground_base: '#D7B7BD',
+        impermeable_hard_pavement: '#858585',
+        gsi_type_planted_surface: '#008B14',
+        gsi_type_paved_surface: '#B5E3EE',
+        gsi_depth: '#ECE957',
     };
     return (
         <div>
-            <label htmlFor="">{`${title}`}</label>
+            <label htmlFor="">{`${displayedTitle}`}</label>
             <div
                 style={{
                     backgroundColor: `${colorSpecs[title]}`,

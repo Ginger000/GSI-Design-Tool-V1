@@ -10,11 +10,6 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import Typography from '@mui/material/Typography';
-import Alert from '@mui/material/Alert';
-import { DataGrid } from '@mui/x-data-grid';
-import Radio from '@mui/material/Radio';
-import Grid from '@mui/material/Grid';
-import Test from './Components/Test';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import CustomTheme from './Assets/CustomTheme';
@@ -30,15 +25,16 @@ function App(props) {
         setMobileOpen(!mobileOpen);
     };
 
-    useEffect(() => {
-        console.log(
-            'scenarios',
-            scenarios,
-            'feedbackScenarios',
-            feedbackScenarios
-        );
-        console.log(displayedGraphic);
-    });
+    //console.log for debugging
+    // useEffect(() => {
+    //     console.log(
+    //         'scenarios',
+    //         scenarios,
+    //         'feedbackScenarios',
+    //         feedbackScenarios
+    //     );
+    //     console.log(displayedGraphic);
+    // });
 
     //get Scenarios from inputPanel and use it in outputPanel
     const [scenarios, setScenarios] = useState(null);
@@ -49,22 +45,42 @@ function App(props) {
     const [surfaceType, setSurfaceType] = useState(null);
     const [stormRecommend, isStormRecommend] = useState(false);
     const [displayedGraphic, setDisplayedGraphic] = useState([
-        'Ground Base',
-        'Impermeable Hard Pavement',
+        'ground_base',
+        'impermeable_hard_pavement',
     ]);
+    const [title, setTitle] = useState('');
+
+    //fetch title data
+    const fetchTitle = async () => {
+        const URL = 'http://localhost:1337/api/title';
+        try {
+            const response = await fetch(URL);
+            const data = await response.json();
+            console.log(data.data.attributes.title);
+            const { title } = data.data.attributes;
+            setTitle(title);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    //fetch all initial data as the app mount
+    useEffect(() => {
+        fetchTitle();
+    }, []);
 
     //change the displayed lengend as the output change with planted or paved surface
     useEffect(() => {
         if (scenarios) {
             const surface =
                 scenarios[0].surface === 'planted'
-                    ? 'GSI Type - Planted Surface'
-                    : 'GSI Type - Paved Surface';
+                    ? 'gsi_type_planted_surface'
+                    : 'gsi_type_paved_surface';
             setDisplayedGraphic(() => [
-                'Ground Base',
-                'Impermeable Hard Pavement',
+                'ground_base',
+                'impermeable_hard_pavement',
                 `${surface}`,
-                'GSI Depth',
+                'gsi_depth',
             ]);
         }
     }, [scenarios]);
@@ -132,7 +148,7 @@ function App(props) {
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" noWrap component={'span'}>
-                            GSI Design Tool
+                            {title}
                         </Typography>
                     </Toolbar>
                 </AppBar>

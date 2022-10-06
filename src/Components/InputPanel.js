@@ -14,6 +14,7 @@ import DATA from '../Data/newFeedbackSearch_all_setDirectInfiltrationAs2.json';
 import Alert from '@mui/material/Alert';
 import Tooltip from '@mui/material/Tooltip';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import Spinner from './Spinner';
 
 const InputPanel = ({
     handleSetScenarios,
@@ -26,7 +27,21 @@ const InputPanel = ({
     feedbackScenarios,
     stormRecommend,
 }) => {
-    //https://github.com/mui-org/material-ui/issues/8180
+    const [isLoading, setIsLoading] = useState(true);
+    const [inputLabels, setInputLabels] = useState('');
+    //fetch input label data
+    const fetchLabels = async () => {
+        const URL = 'http://localhost:1337/api/inputs';
+        const response = await fetch(URL);
+        const data = await response.json();
+        setInputLabels(data.data);
+        setIsLoading(false);
+    };
+
+    useEffect(() => {
+        fetchLabels();
+    }, []);
+
     const changeDuration = (e) => {
         setDuration(Number.parseInt(e.target.value));
         setDurationHelperText('');
@@ -65,19 +80,6 @@ const InputPanel = ({
         { value: 5, label: '5' },
     ];
 
-    const tooltipContent = {
-        runoff_reduction:
-            'The specified performance standard is a 80% reduction in stormwater runoff',
-
-        storm_duration:
-            'Option to choose a short storm duration (2 Hours) or a long storm duration (24 hours)',
-
-        soil_type:
-            'Option to choose native soils texture (fine, mixed, coarse)',
-
-        gsi_type:
-            'Option to choose two GSI Types, Planted (Rain Garden) and Paved (Permeable Pavement)',
-    };
 
     const [durationHelperText, setDurationHelperText] = useState('');
     const [soilHelperText, setSoilHelperText] = useState('');
@@ -126,14 +128,17 @@ const InputPanel = ({
             }
         }
     };
-    return (
+    return isLoading ? (
+        <Spinner />
+    ) : (
         <Box sx={{ display: 'flex', mt: 6, justifyContent: 'center' }}>
             <form onSubmit={generateScenarios}>
                 <Stack spacing={2}>
                     <FormControl component="fieldset">
                         <Box sx={{ width: 300, ml: 1 }}>
                             <Typography gutterBottom>
-                                Design Storm (inches)
+                                {inputLabels[0].attributes.label}
+                                {console.log(inputLabels[0].attributes)}
                             </Typography>
                             {stormRecommend && feedbackScenarios ? (
                                 <Alert variant="outlined" severity="info">
@@ -173,9 +178,9 @@ const InputPanel = ({
                     </FormControl>
                     <FormControl component="fieldset">
                         <FormLabel component="legend">
-                            Runoff Reduction
+                            {inputLabels[1].attributes.label}
                             <Tooltip
-                                title={`${tooltipContent.runoff_reduction}`}
+                                title={inputLabels[1].attributes.info}
                                 placement="right"
                             >
                                 <Button>
@@ -200,9 +205,9 @@ const InputPanel = ({
 
                     <FormControl error={durationError} component="fieldset">
                         <FormLabel component="legend">
-                            Storm Duration
+                            {inputLabels[2].attributes.label}
                             <Tooltip
-                                title={`${tooltipContent.storm_duration}`}
+                                title={inputLabels[2].attributes.info}
                                 placement="right"
                             >
                                 <Button>
@@ -234,9 +239,9 @@ const InputPanel = ({
 
                     <FormControl error={soilError} component="fieldset">
                         <FormLabel component="legend">
-                            Soil Type
+                            {inputLabels[3].attributes.label}
                             <Tooltip
-                                title={`${tooltipContent.soil_type}`}
+                                title={inputLabels[3].attributes.info}
                                 placement="right"
                             >
                                 <Button>
@@ -272,9 +277,9 @@ const InputPanel = ({
 
                     <FormControl error={surfaceError} component="fieldset">
                         <FormLabel component="legend">
-                            GSI Type
+                            {inputLabels[4].attributes.label}
                             <Tooltip
-                                title={`${tooltipContent.gsi_type}`}
+                                title={inputLabels[4].attributes.info}
                                 placement="right"
                             >
                                 <Button>

@@ -26,6 +26,7 @@ import FeedbackScenariosDataGrid from './FeedbackScenariosDataGrid';
 import Legend from './Legend';
 import Tooltip from '@mui/material/Tooltip';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import Spinner from './Spinner';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -74,6 +75,43 @@ const OutputPanel = ({
     feedbackScenarios,
     displayedGraphic,
 }) => {
+    const [isLoadingOutputLabels, setIsLoadingOutputLabels] = useState(true);
+    const [isLoadingLegendNames, setIsLoadingLegendNames] = useState(true);
+    const [outputLabels, setOutputLabels] = useState([]);
+
+    const [legendNames, setLegendNames] = useState([]);
+
+    // fetch the legend names from CMS
+    const fetchLegendNames = async () => {
+        const URL = 'http://localhost:1337/api/legends';
+        try {
+            const response = await fetch(URL);
+            const data = await response.json();
+            setLegendNames(data.data);
+            setIsLoadingLegendNames(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    // fetch the output labels from CMS
+    const fetchOutputs = async () => {
+        const URL = 'http://localhost:1337/api/outputs';
+        try {
+            const response = await fetch(URL);
+            const data = await response.json();
+            setOutputLabels(data.data);
+            setIsLoadingOutputLabels(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchOutputs();
+        fetchLegendNames();
+    }, []);
+
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
@@ -184,18 +222,17 @@ const OutputPanel = ({
         30: 2.5,
     };
 
-    const tooltipContent = {
-        loading_ratio:
-            'The loading ratio is the ratio of the surface runoff area to the green infrastructure area',
-        depth: 'Depth is the thickness of the GSI surface design, specified to be either 12, 18, 24 or 30 inches',
-    };
-
     const matches = useMediaQuery('(min-width:600px)');
-    return (
+    return isLoadingOutputLabels && isLoadingLegendNames ? (
+        <Spinner />
+    ) : (
         <>
             <Grid container spacing={2}>
                 <Grid item height={500} xs={12} md={12} lg={12}>
-                    <Legend displayedGraphic={displayedGraphic} />
+                    <Legend
+                        displayedGraphic={displayedGraphic}
+                        legendNames={legendNames}
+                    />
                     <Canvas colorManagement>
                         <Suspense fallback={null}>
                             <OrthographicCamera
@@ -295,9 +332,10 @@ const OutputPanel = ({
                             )}
                             <FormControl component="fieldset">
                                 <FormLabel component="legend">
-                                    Depth (inches)
+                                    {outputLabels[0].attributes.label}
+                                    {/* Depth (inches) */}
                                     <Tooltip
-                                        title={`${tooltipContent.depth}`}
+                                        title={outputLabels[0].attributes.info}
                                         placement="right"
                                     >
                                         <Button>
@@ -350,9 +388,11 @@ const OutputPanel = ({
                             {surface === 'planted' ? (
                                 <FormControl component="fieldset">
                                     <FormLabel component="legend">
-                                        Loading Ratio
+                                        {outputLabels[1].attributes.label}
                                         <Tooltip
-                                            title={`${tooltipContent.loading_ratio}`}
+                                            title={
+                                                outputLabels[1].attributes.info
+                                            }
                                             placement="right"
                                         >
                                             <Button>
@@ -479,7 +519,7 @@ const OutputPanel = ({
                     >
                         <Tab label="Instruction" {...a11yProps(0)} />
                         <Tab label="Theory" {...a11yProps(1)} />
-                        <Tab label="Console" {...a11yProps(2)} />
+                        <Tab label="Output" {...a11yProps(2)} />
                         <Tab label="Credit" {...a11yProps(3)} />
                     </Tabs>
                 </Box>
@@ -576,6 +616,8 @@ const OutputPanel = ({
                             scenarios={scenarios}
                             depth={depth}
                             loadingRatio={loadingRatio}
+                            setDepth={setDepth}
+                            setLoadingRatio={setLoadingRatio}
                             changeTogether={handleChangeTogether}
                         />
                     ) : (
